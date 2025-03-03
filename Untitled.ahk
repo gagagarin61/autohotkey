@@ -73,7 +73,6 @@ vk1D & 8::
         Send, {Left}
 Return
 
-vk1D & 1::Send, 109286{tab}fdsajkl;1{enter}
 
 vk1D & R::      ;ウィンドウ最大化
     WinGet, tmp, MinMax, A
