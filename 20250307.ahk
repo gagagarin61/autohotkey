@@ -1,4 +1,5 @@
-﻿;NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+
+;NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 ; #Warn  ; Enable warnings to assist with detecting common errors.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
@@ -167,23 +168,23 @@ vk1C & G::  ;googleで開く
 ; ホットキーを指定してbatファイルを実行
 #+A::
     {
-	Path := "C:\Users\aaa109286\Documents"
-	; 実行するbatファイルの名前（拡張子込み）
+        Path := "C:\Users\aaa109286\Documents"
+        ; 実行するbatファイルの名前（拡張子込み）
 
-	batFileName := "ClipboardImage2File.bat"
-	; 完全なパスを組み立て
-	batFilePath := Path . "\" . batFileName
+        batFileName := "ClipboardImage2File.bat"
+        ; 完全なパスを組み立て
+        batFilePath := Path . "\" . batFileName
 
-	if FileExist(batFilePath)
-	{
+        if FileExist(batFilePath)
+        {
         Run, %batFilePath%, %Path%, Hide
         ToolTip now making
         SetTimer, RemoveToolTip, 1000
-	}
-	else
-	{
+        }
+        else
+        {
         MsgBox, Error: %batFileName% does not exist
-	}
+        }
     return
     }
 
@@ -383,123 +384,6 @@ return
 }
 }
 return
-
-
-#IfWinActive,ahk_exe OUTLOOK.EXE
-^+G:: ; Ctrl+Shift+Gで実行
-    ; クリップボードの内容を取得
-    ClipSaved := ClipboardAll
-    ClipWait, 1 ; クリップボードのデータが準備されるのを待つ
-
-    ; クリップボードが空かどうか確認
-    if Clipboard =
-    {
-        MsgBox, 48, Error, Clipboard is empty. Please copy some text first.
-        return
-    }
-
-    ; クリップボードの内容を加工
-    processedText := ""
-    Loop, Parse, Clipboard, `n, `r
-    {
-        processedText .= "> " A_LoopField "`n" ; 各行の文頭に ">" を追加
-    }
-
-    ; 加工したテキストをクリップボードに戻す
-    Clipboard := SubStr(processedText, 1, -1) ; 最後の余分な改行を削除
-    ClipWait, 1 ; 確実にクリップボードが設定されるまで待つ
-
-    send,^v
-
-return
-
-#SingleInstance force
-
-^+s:: ; Ctrl + Shift + S で送信済みアイテムを開く
-OpenSentItemsFolder()
-return
-
-OpenSentItemsFolder() {
-try {
-olApp := ComObjActive("Outlook.Application") ; 既存の Outlook インスタンスを取得
-olNamespace := olApp.GetNamespace("MAPI")
-sentFolder := olNamespace.GetDefaultFolder(5) ; 送信済みアイテム（5は既定のフォルダ ID）
-
-if (sentFolder) {
-olApp.ActiveExplorer.CurrentFolder := sentFolder ; 送信済みフォルダを開く
-} else {
-MsgBox, 16, Error, Could not find the Sent Items folder!
-}
-} catch e {
-MsgBox, 16, Error, % "An error occurred: " e.Message
-}
-}
-
-#SingleInstance force
-
-+^q::
-    DeleteAttachments()
-return
-
-#SingleInstance force
-
-
-
-DeleteAttachments() {
-    try {
-        olApp := ComObjActive("Outlook.Application")
-        olExp := olApp.ActiveExplorer
-        olSel := olExp.Selection
-
-        if olSel.Count = 0 {
-            MsgBox, 48, Outlook, No email selected!
-            return
-        }
-
-        Loop, % olSel.Count {
-            mail := olSel.Item(A_Index)
-            if (mail.Attachments.Count > 0) {
-                Loop, % mail.Attachments.Count {
-                    mail.Attachments.Item(1).Delete()
-                }
-                mail.Save()  ; 変更を保存
-            }
-        }
-
-        MsgBox, 64, Outlook, Attachments deleted successfully!
-    } catch e {
-        MsgBox, 16, Error, % "An error occurred: " e.Message
-    }
-}
-
-
-#SingleInstance force
-
-^+d::
-OpenDraftsFolder()
-return
-
-OpenDraftsFolder() {
-try {
-olApp := ComObjActive("Outlook.Application") ; 既存の Outlook インスタンスを取得
-olNamespace := olApp.GetNamespace("MAPI")
-draftsFolder := olNamespace.GetDefaultFolder(16) ; 下書きフォルダ（16 は既定のフォルダ ID）
-
-if (draftsFolder) {
-olApp.ActiveExplorer.CurrentFolder := draftsFolder ; 下書きフォルダを開く
-} else {
-MsgBox, 16, Error, Could not find the Drafts folder!
-}
-} catch e {
-MsgBox, 16, Error, % "An error occurred: " e.Message
-}
-}
-
-
-
-
-#IfWinActive
-
 
 
 
@@ -808,4 +692,3 @@ return
 
 ;#IfWinActive, ahk_exe POWERPNT.EXE
 #IfWinActive, ahk_class
-
